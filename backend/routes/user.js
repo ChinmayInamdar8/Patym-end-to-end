@@ -1,10 +1,13 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const {User} = require('../db');
-const jwt_secret = require('../config');
+const Userrouter = express.Router();
 const zod = require('zod');
 
-const Userrouter = express.Router();
+const {User} = require('../db');
+const jwt_secret = require('../config');
+const AuthMiddleware = require('../middleware');
+
+
 Userrouter.use(express.json());
 
 
@@ -18,6 +21,12 @@ const signupBody = zod.object({
 const signinBody = zod.object({
     username:zod.string().email().min(3).max(30),
     password:zod.string().min(6)
+})
+
+const updateBody = zod.object({
+    password:zod.string().min(6),
+    firstname:zod.string(),
+    lastName:zod.string(),
 })
 
 
@@ -68,7 +77,7 @@ Userrouter.post('/signup', async (req, res)=>{
 Userrouter.post('/signin', async (req, res)=>{
     const success = signinBody.safeParse(req.body);
     if(!success){
-        res.status(411).json({
+       return res.status(411).json({
             message:"invalid inputs"
         })
     }
@@ -95,5 +104,58 @@ Userrouter.post('/signin', async (req, res)=>{
     })
 });
 
+
+
+// *******************************************************
+
+Userrouter.put('/', AuthMiddleware, async (req, res)=>{
+    const success = updateBody.safeParse(req.body);
+
+    if(!success){
+        return res.status(411).json({
+            message:"invalid inputs"
+        });
+    }
+
+    await User.updateOne({_id:req.userId}, req.body);
+
+    res.json({
+        message:"updated successfully!"
+    })
+
+});
+
+
+
+// *******************************************************
+// the query parameter will look like /bulk?filter=chinmay
+Userrouter.get('/bluk', async(req, res)=>{
+    const filter = req.query.filter || "";
+
+    const users = await User.find({
+        $or:[
+            {
+                firstName:{
+                    "$regex":filter
+                }
+            },
+            {
+                lastName:{
+                    "$regex":filter
+                }
+            }
+        ]
+    });
+
+    res.json({
+        user:users.map(user=>({
+            username:user.username,
+            firstName:user.firstName,
+            lastName:user.lastName,
+            _id:user._id
+        })),
+    });
+
+});
 
 module.exports = Userrouter;
