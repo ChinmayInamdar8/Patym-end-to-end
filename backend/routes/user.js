@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const Userrouter = express.Router();
 const zod = require('zod');
 
-const {User} = require('../db');
+const {User, Account} = require('../db');
 const jwt_secret = require('../config');
 const AuthMiddleware = require('../middleware');
 
@@ -62,6 +62,12 @@ Userrouter.post('/signup', async (req, res)=>{
     const token = jwt.sign({
         userId
     }, jwt_secret);
+
+    // creating a bank account for that person and adding a random amount into its bank account. 
+    await Account.create({
+        userId,
+        balance:1 + Math.random() * 10000
+    })
 
     // console.log(username, password, firstName, lastName);
 
