@@ -20,12 +20,11 @@ router.post('/transfer', AuthMiddleware, async(req, res)=>{
     // check for senders account
     const account = await Account.findOne({userId:req.userId});
 
-    if(!account || account.balance<amount){
+    if(!account || account.balance<amount || amount<=0){
         return res.status(400).json({
             message:"balance is insufficient"
         })
     }
-
     const toAccount = await Account.findOne({userId:to});
 
     if(!account){
