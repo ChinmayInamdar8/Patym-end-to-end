@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Button } from "./button"
+import {useNavigate} from "react-router-dom"
 
 export const Users=()=>{
 
@@ -31,6 +32,8 @@ export const Users=()=>{
 
 
 function User({user}){
+
+    const navigate = useNavigate();
     return (
         <div className="flex justify-between">
             <div className="flex">
@@ -45,7 +48,9 @@ function User({user}){
             </div>
 
             <div className="flex flex-col justify-center h-full">
-                <Button label={'Send Money'}></Button>
+                <Button label={'Send Money'} callback={()=>{
+                    navigate('/send')
+                }}></Button>
             </div>
         </div>
     )

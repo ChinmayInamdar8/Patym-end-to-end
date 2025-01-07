@@ -4,28 +4,29 @@ const Userrouter = express.Router();
 const zod = require('zod');
 
 const {User, Account} = require('../db');
-const jwt_secret = require('../config');
-const AuthMiddleware = require('../middleware');
+const {JWT_SECRET} = require('../config');
+const {AuthMiddleware} = require('../middleware');
 
 
 Userrouter.use(express.json());
 
+console.log(JWT_SECRET);
 
 const signupBody = zod.object({
-    username : zod.string().email().min(3).max(30),
+    userName : zod.string().email().min(3).max(30),
     password:zod.string().min(6),
-    firstname:zod.string(),
+    firstName:zod.string(),
     lastName:zod.string(),
 })
 
 const signinBody = zod.object({
-    username:zod.string().email().min(3).max(30),
+    userName:zod.string().email().min(3).max(30),
     password:zod.string().min(6)
 })
 
 const updateBody = zod.object({
     password:zod.string().min(6),
-    firstname:zod.string(),
+    firstName:zod.string(),
     lastName:zod.string(),
 })
 
@@ -43,7 +44,8 @@ Userrouter.post('/signup', async (req, res)=>{
         })
     }
 
-    const existingUser = await User.findOne({username:req.body.username});
+    const existingUser = await User.findOne({userName:req.body.userName});
+    console.log(existingUser);
 
     if(existingUser){
         return res.status(411).json({
@@ -52,7 +54,7 @@ Userrouter.post('/signup', async (req, res)=>{
     }
 
     const user = await User.create({
-        username:req.body.username,
+        userName:req.body.userName,
         password : req.body.password,
         firstName: req.body.firstName,
         lastName : req.body.lastName
@@ -61,12 +63,12 @@ Userrouter.post('/signup', async (req, res)=>{
     const userId = user._id;
     const token = jwt.sign({
         userId
-    }, jwt_secret);
+    }, JWT_SECRET);
 
     // creating a bank account for that person and adding a random amount into its bank account. 
     await Account.create({
         userId,
-        balance:1 + Math.random() * 10000
+        balance:Math.floor(1 + Math.random() * 10000)
     })
 
     // console.log(username, password, firstName, lastName);
@@ -89,18 +91,19 @@ Userrouter.post('/signin', async (req, res)=>{
     }
 
     const user = await User.findOne({
-        username:req.body.username,
+        userName:req.body.userName,
         password:req.body.password
     });
 
+    console.log(user);
 
     if(user){
         const userId = user._id;
         const token = jwt.sign({
             userId                    // also userId:user._id is valid
-        }, jwt_secret);
+        }, JWT_SECRET);
 
-        res.json({
+       return res.json({
             token:token 
         })
     }
@@ -155,7 +158,7 @@ Userrouter.get('/bluk', async(req, res)=>{
 
     res.json({
         user:users.map(user=>({
-            username:user.username,
+            userName:user.userName,
             firstName:user.firstName,
             lastName:user.lastName,
             _id:user._id

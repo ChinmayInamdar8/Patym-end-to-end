@@ -3,11 +3,13 @@ import { Signup } from "./pages/signup"
 import { Signin } from "./pages/signin"
 import { Dashboard } from "./pages/dashbord"
 import { Send } from "./pages/send"
+import { RecoilRoot } from "recoil"
 
 function App() {
 
   return (
-    <BrowserRouter>
+   <RecoilRoot>
+     <BrowserRouter>
     <Routes>
       <Route path="/signup" element={<Signup/>}/>
       <Route path="/signin" element={<Signin/>}/>
@@ -15,6 +17,7 @@ function App() {
       <Route path="/send" element={<Send/>} />
     </Routes>
     </BrowserRouter>
+   </RecoilRoot>
   )
 }
 
