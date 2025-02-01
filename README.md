@@ -72,7 +72,7 @@ Feel free to fork the repository and submit pull requests. Contributions are wel
 ## 📞 Contact
 - **Author:** Chinmay Inamdar
 - **GitHub:** [ChinmayInamdar8](https://github.com/ChinmayInamdar8)
-- **LinkedIn:** [Your LinkedIn Profile](#)
+- **LinkedIn:** [chinmay1inamdar](https://www.linkedin.com/in/chinmayinamdar112/)
 
 ---
 ### ⭐ If you find this project useful, give it a star on GitHub!
