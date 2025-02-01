@@ -57,13 +57,16 @@ export const Signin = () => {
                     });
 
                   setToken(response.data.token);
+                  window.localStorage.setItem("token",response.data.token);
+                  window.localStorage.setItem("userName",response.data.userName);
                   navigate('/dashboard');
 
                 } catch (e) {
+                  console.log("error is " , e);
                   Swal.fire({
                     icon: "error",
                     title: "Oops...",
-                    text: "Use is not present try again",
+                    text: "User is not present try again",
                   });
                 }
               }}

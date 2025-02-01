@@ -75,7 +75,8 @@ Userrouter.post('/signup', async (req, res)=>{
 
     res.json({
         message:"User created Successfully",
-        token:token
+        token:token,
+        userName:user.userName
     });
 })
 
@@ -104,7 +105,8 @@ Userrouter.post('/signin', async (req, res)=>{
         }, JWT_SECRET);
 
        return res.json({
-            token:token 
+            token:token,
+            userName:user.userName
         })
     }
 

@@ -54,31 +54,33 @@ export const Users = () => {
 function User({ user }) {
   const navigate = useNavigate();
   const setSendTo = useSetRecoilState(sendTo);
-  return (
-    <div className="flex justify-between" key={user._id}>
-      <div className="flex">
-        <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2 ">
-          <div className="flex flex-col justify-center h-full text-xl">
-            {user.firstName[0]}
+  if(window.localStorage.getItem("userName")!==user.userName){
+    return (
+      <div className="flex justify-between" key={user._id}>
+        <div className="flex">
+          <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2 ">
+            <div className="flex flex-col justify-center h-full text-xl">
+              {user.firstName[0]}
+            </div>
+          </div>
+          <div className="flex flex-col justify-center h-full">
+            {user.firstName} {user.lastName}
           </div>
         </div>
+  
         <div className="flex flex-col justify-center h-full">
-          {user.firstName} {user.lastName}
+          <Button
+            label={"Send Money"}
+            callback={() => {
+              navigate("/send");
+              setSendTo({
+                  name:`${user.firstName} ${user.lastName}`,
+                  id:user._id,
+              });
+            }}
+          ></Button>
         </div>
       </div>
-
-      <div className="flex flex-col justify-center h-full">
-        <Button
-          label={"Send Money"}
-          callback={() => {
-            navigate("/send");
-            setSendTo({
-                name:`${user.firstName} ${user.lastName}`,
-                id:user._id,
-            });
-          }}
-        ></Button>
-      </div>
-    </div>
-  );
+    );
+  }
 }

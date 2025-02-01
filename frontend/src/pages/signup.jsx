@@ -73,6 +73,8 @@ export const Signup = () => {
               })
 
                 setToken(response.data.token);
+                window.localStorage.setItem("token",response.data.token);
+                  window.localStorage.setItem("userName",response.data.userName);
                 navigate('/dashboard');
 
             }

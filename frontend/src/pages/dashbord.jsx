@@ -8,12 +8,11 @@ import { useEffect, useState } from "react";
 
 export const Dashboard = () => {
 
-  const Authtoken = useRecoilValue(token);
   const [balance, setBalance] = useState(null);
 
   useEffect(()=>{
       const returnBalance = async()=>{
-        const fetchedBalance = await fetchBalance(Authtoken);
+        const fetchedBalance = await fetchBalance(window.localStorage.getItem("token"));
         setBalance(fetchedBalance);
       };
       returnBalance();
